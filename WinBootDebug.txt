@@ -24,7 +24,7 @@ Booting a Windows machine into debugging mode using WinDbg (Windows Debugger) al
    - Go to "File" > "Kernel Debug," or press `Ctrl+K`.
 
 5. **Configure Network Debugging**:
-   - In the "Kernel Debugging" dialog, set the "Host Pipe" or "TCP/IP" option based on your network configuration. If you're using Ethernet, you can use "TCP/IP."
+   - In the "Kernel Debugging" dialog, set the "Host Pipe" or "TCP/IP" option based on your network configuration. If you're using Ethernet, you can use "TCP/IP."[NET]
    - Enter the IP address or machine name of the target machine.
    - Set the port number to the same port you specified in the `debugport` command on the target machine (usually 1).
    - Click "OK."
