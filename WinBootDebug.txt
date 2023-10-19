@@ -1,0 +1,42 @@
+Booting a Windows machine into debugging mode using WinDbg (Windows Debugger) allows you to perform kernel-level debugging and diagnose system-level issues. Here's how you can do it:
+
+1. **Install WinDbg**: Ensure you have WinDbg installed on your debugging machine. You can download the Windows Driver Kit (WDK) or Windows Software Development Kit (SDK) to get WinDbg.
+
+2. **Connect Debugging Machine and Target Machine**:
+   - You need two machines for this: the debugging machine and the target machine. The debugging machine runs WinDbg, while the target machine is the one you want to debug.
+   - Make sure both machines are connected via a network connection, such as Ethernet.
+
+3. **Configure Target Machine**:
+   - On the target machine, open an elevated Command Prompt or PowerShell.
+   - Run the following command to configure the target machine to allow kernel debugging over a network connection:
+
+   ```bash
+   bcdedit /set debug on
+   bcdedit /set debugtype serial
+   bcdedit /set debugport 1
+   bcdedit /set baudrate 115200
+   ```
+
+   - Reboot the target machine to apply the changes.
+
+4. **Prepare Debugging Machine**:
+   - On the debugging machine, open WinDbg.
+   - Go to "File" > "Kernel Debug," or press `Ctrl+K`.
+
+5. **Configure Network Debugging**:
+   - In the "Kernel Debugging" dialog, set the "Host Pipe" or "TCP/IP" option based on your network configuration. If you're using Ethernet, you can use "TCP/IP."
+   - Enter the IP address or machine name of the target machine.
+   - Set the port number to the same port you specified in the `debugport` command on the target machine (usually 1).
+   - Click "OK."
+
+6. **Connect and Start Debugging**:
+   - Click "File" > "Kernel Debug" again.
+   - Select "Connect" to initiate the debugging session.
+
+7. **Break into Debugging**:
+   - Once the connection is established, you can press `Ctrl+Break` to break into the debugger, pause the target machine, and start debugging.
+
+8. **Analyze and Debug**:
+   - You can now use WinDbg to analyze kernel-level issues, set breakpoints, inspect memory, and perform various debugging tasks.
+
+Please note that debugging a Windows kernel is an advanced and potentially risky task. Make sure you understand the implications and potential risks before attempting kernel debugging, especially on a production system.
