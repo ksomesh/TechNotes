@@ -1,0 +1,16 @@
+Hashing : https://www.geeksforgeeks.org/hashing-data-structure/?ref=shm
+% the easiest hash function
+double hashing
+Open addressing :linear probing(hash(x) + 1) % S, quadratic probing(hash(x) + 1*1) % S, double hashing(hash(x) + i*hash2(x)) 
+chaining to avoid collision 
+rehashing : resizing of hash if load factor is more
+ 
+Solution patern
+----------------
+Mostly searching through Hash map
+create multiple hash
+create reverse hash
+
+ 
+Find all pairs (a, b) in an array such that a % b = k
+Convert an array to reduced form | Set 1 (Simple and Hashing)

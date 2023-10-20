@@ -1,0 +1,320 @@
+mohana.krishna@rubrik.com
+9845221417
+
+
+
+using enum, union, malloc, calloc
+virtual class
+pure virtual function and abstract class : interface
+casting operator : const, static,dynamic, reinterpret
+fstream use and string stream
+freind class and function can access private member
+static member variable and func
+define iterator : https://www.geeksforgeeks.org/implementing-forward-iterator-in-bst/
+
+
+
+In a Systems basics round, expect to be tested on building blocks of program execution, such as
+multi-threading, synchronization primitives, scheduling, memory, IO, time keeping etc. Example
+problem: Implement a thread-safe data structure which can keep track of number of incoming
+requests grouped by IP Address over a time window. Add support for grouping by other
+attributes such as BrowserAgent.
+
+Review your Computer Science fundamentals- time and space complexity analysis, sorting,
+searching, hash-tables, graphs etc.
+● Know about processes, threads and concurrency. Review your operating system and system
+architecture concepts – condition variables, semaphores, mutexes, memory, IO, scheduling,
+time-keeping, caches etc. Know how to use synchronization primitives in your favorite
+programming language.
+
+Rate limiter : it can be bsed on user/host/api etc https://www.youtube.com/watch?v=yM4XxpdyJnM
+	time based or ack based
+	sliding window : 
+	leaky bucket :input can vary but output at a constant speed , keep in queue and o/p at cost speed, discard if queue is full
+	Token bucket: a queue to hold token, each req goes through if gets a token, token generation can be bumped to address burst 
+	
+	
+shared pointer implementation : https://www.geeksforgeeks.org/how-to-implement-user-defined-shared-pointers-in-c/
+
+Sychronization primitives
+	Mutex
+	semaphore
+	lock : spinlock
+	events
+	signal 
+	conditional variable
+	
+	atomic variable : change happen in on tick
+	
+thread state
+	new, runnable, waiting/ blocked , running, terminated
+
+Sheduling
+	First come first serve 
+	shortest job first
+	round robin
+	priority sheduling shortest remaining time 
+	multiple level queue scheduling  : each queue have their own scheduling
+	
+	
+Memory layout : https://www.geeksforgeeks.org/memory-layout-of-c-program/
+	text
+	init data // static and global varibles
+	uninit data // static and global var
+	hepa
+	stack
+
+process : https://www.geeksforgeeks.org/fork-system-call/
+	fork() returns 0 to child, positive to parent , negative in failure
+	inherits everything from parent 
+	after  fork both parent and child runs the next command
+	2^n child for n fork() calls 
+	exec() replace current image with new image 
+	
+	waitpid() etc similar to join
+
+inter process communication
+	shared memory
+	message passing : pipe, socket, rpc
+
+	
+
+https://en.cppreference.com/w/cpp/thread
+Thread
+	thread(function, arg)
+	.join
+	
+	yeild()
+	
+Mutex
+	lock() //blocking
+	unlock()
+	try_lock() //non blocking
+	
+Semaphore
+	aquire()
+	release()
+
+Producer consumer problem
+-------------------------
+	infinite size buffer
+		One semaphore ,producer keeps producing  and signal empty semaphore, consumer waits if empty(semaphore) otherwise consume
+	finite size buffer 
+		two semaphore , circular q/array use %, 
+	
+
+
+Reader-Writer problem
+--------------------
+mutex read, write;
+int readcount
+Writer()
+{
+Write.lock
+	write
+write.unlock
+}
+reader()
+{
+read.lock
+readcount++
+if readcount == 1
+	write.lock
+	
+read.unlock
+
+read
+
+read.lock
+readcount--
+if readcount == 0
+	write.unlock
+read.unlock	
+
+}
+
+
+Rubrik 1st round
+----------------
+
+#include <iostream>
+#include <thread>         // std::thread
+#include <mutex>          // std::mutex
+#include <semaphore.h>
+#include <unistd.h>
+
+using namespace std;
+
+std::mutex mtxUseBathroom, mtxMutualExclusion;  
+int iRepCount=0, iDemCount=0;
+counting_semaphore<3> semUseBathroom(3);
+
+void use_bathroom(string& name) {
+  printf("%s has started using bathroom", name.c_str());
+  sleep(2);
+  printf("%s is done using bathroom", name.c_str());
+}
+
+void republican_use_bathroom(string& name) {
+
+  mtxUseBathroom.lock();
+    iRepCount++;
+    if (iRepCount == 1)
+      mtxMutualExclusion.lock();
+  mtxUseBathroom.unlock();
+
+
+  // your code/logic here
+  //semCount.wait()
+  semUseBathroom.acquire();
+  use_bathroom(name);
+  semUseBathroom.release();
+  //semCount.release()
+  // your code/logic here
+
+  mtxUseBathroom.lock();
+    iRepCount--;
+    if (iRepCount == 0)
+      mtxMutualExclusion.unlock();
+  mtxUseBathroom.unlock();
+
+}
+
+
+void democtrat_use_bathroom(string& name) {
+
+  mtxUseBathroom.lock();
+    iDemCount++;
+    if (iDemCount == 1)
+      mtxMutualExclusion.lock();
+  mtxUseBathroom.unlock();
+
+
+  // your code/logic here
+  //semCount.wait()
+  semUseBathroom.acquire();
+  use_bathroom(name);
+  semUseBathroom.release();
+  //semCount.release()
+  // your code/logic here
+
+  mtxUseBathroom.lock();
+    iDemCount--;
+    if (iDemCount == 0)
+      mtxMutualExclusion.unlock();
+  mtxUseBathroom.unlock();
+
+}
+
+int main() {
+/*
+rep1 = thread()
+rep1.republican_use_bathroom
+rep2 = thread()
+demo1 = thread()
+demo1.democrat_use_bathroom
+*/
+
+std::thread threads[5];
+threads[0] = thread(republican_use_bathroom, "rep1");
+threads[1] = thread(republican_use_bathroom, "rep2");
+threads[2] = thread(republican_use_bathroom, "rep3");
+threads[3] = thread(democtrat_use_bathroom, "demo1");
+threads[4] = thread(democtrat_use_bathroom, "demo2");
+
+for (auto& th : threads) th.join();
+return 0;
+}
+
+/*
+// To execute C++, please define "int main()"
+int main() {
+  auto words = { "Hello, ", "World!", "\n" };
+  for (const string& word : words) {
+    cout << word;
+  }
+  return 0;
+}
+
+
+// Your previous Plain Text content is preserved below:
+
+// This is just a simple shared plaintext pad, with no execution capabilities.
+
+// When you know what language you'd like to use for your interview,
+// simply choose it from the dots menu on the tab, or add a new language
+// tab with the + button.
+
+// You can also change the default language your pads are created with
+// in your account settings: https://app.coderpad.io/settings
+
+// Enjoy your interview!
+
+/*
+
+Problem Description:
+A bathroom is being designed for the use of both republican and democrat in an office but requires the following constraints to be maintained:
+1. There cannot be republican and democrat in the bathroom at the same time.
+2. There should never be more than three politicians in the bathroom simultaneously.
+
+
+mutex mutualExclusion, useBatroom
+int iRepCount, iDemCount
+semaphore semCount(3)
+
+main() {
+
+rep1 = thread()
+rep1.republican_use_bathroom
+rep2 = thread()
+demo1 = thread()
+demo1.democrat_use_bathroom
+
+}
+
+republican_use_bathroom(name) {
+
+  useBathroom.lock()
+    iRepCount++
+    if (iRepCount == 1)
+      mutualExclusion.lock()
+  useBathroom.unlock()
+
+
+  // your code/logic here
+  semCount.wait()
+  use_bathroom(name)
+  semCount.release()
+  // your code/logic here
+
+  useBathroom.lock()
+    iRepCount--
+    if (iRepCount == 0)
+      mutualExclusion.unlock()
+  useBathroom.unlock()
+
+}
+
+democrat_use_bathroom(name) {
+
+ // your code/logic here
+
+  use_bathroom(name)
+
+  // your code/logic here
+
+}
+
+
+use_bathroom(name) {
+  printf("%s has started using bathroom", name);
+  sleep(2);
+  printf("%s is done using bathroom", name);
+}
+
+*/
+
+
+2nd round
+==============
+design publisher subscriber

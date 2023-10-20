@@ -1,0 +1,460 @@
+https://www.interviewkickstart.com/interview-questions/rubrik-interview-questions
+Write a program to reverse a singly Linked List
+Void ReverseLinkedList(Node **Head)
+{
+	if (*Head == NULL)
+		return NULL;
+	Node * oPrev = NULL;
+	Node * oCur = *Head;
+	
+	while(oCur != NULL)
+	{
+		Node *oNext = Head->next;
+		oCur->next = oPrev;
+		oPrev = oCur;
+		oCur = oNext;
+	}
+	*Head = oPrev; 
+}
+
+K node reversal
+Void ReverseLinkedList(Node **Head, int k)
+{
+	if (*Head == NULL)
+		return NULL;
+	Node * oPrev = NULL;
+	node* oCur = *Head;
+	
+	while(oCur)
+	{
+		Node* oBlockEnd = NULL;
+		Node * oBlockStart= oCur
+		int n = 1;
+		while(oCur->Next != NULL && n<k)
+		{
+			oCur = oCur->Next;
+			n++
+		}
+		oBlockEnd = oCur;
+
+		oCur = oBlockEnd->next;
+		
+		oBlockEnd->Next = OPrev;
+		oPrev = OBlockStart; 
+	}		
+		
+	*Head = oPrev; 
+}
+
+Write a program to find the missing element in a 2Dimensional integer array : see if binary search can be used 
+Write a program to calculate the height of a given binary tree 
+int Height(Node * root)
+{
+	if(root == NULL)
+		return 0;
+	if(root->left == NULL && root->right == NULL)
+		return 1;
+	else
+		return 1 + max({Height(root->left), Height(root->right)})
+}
+Write a program to implement a recursive/iterative function to remove the nth node from a singly linked list
+void RemoveNthNode(Node *Head, int N)
+{
+	Node* oCur = Head;
+	Node * oPrev = NULL;
+	for(int i =0; i < N && oCur != NULL; i++)
+	{
+		oPrev= oCur;
+		oCur = oCur->next;
+	}
+	if(i  == N)
+	{
+		oPrev->next = oCur->next;
+		delete  oCur;
+	}
+}
+
+void RemoveNthNode(Node *Head, int N)
+{
+	if (Head == NULL)
+		return;
+	
+	if (N == 1)
+	{
+		Node* oPrev = Head;
+		Node* oCur = Head->Next;
+		if (oCur)
+		{
+			oPrev->next = oCur->next;
+			delete oCur;
+		}
+	}
+
+	RemoveNthNode(Head->next, N-1
+
+}
+
+Write a function to find the level-order traversal for a given binary tree
+Void LevelOrderTraversal(Node* root)
+{
+	queue<node*> q;
+	q.enque(root)
+	while (Node *temp = q.Dequeue)
+	{
+		cout << temp->val;
+		if(temp->left)
+			q.enque(temp->left)
+		if(temp->right)
+			q.enque(temp.right)
+	}
+}
+Write a program to connect the nodes that have the same vertical distance in a graph----------- 
+Write a code to print the top view of a binary tree :  use hash
+Write a program to find if a binary tree is a binary search tree or not: inorder traversal should be increasing order , pass min and max range to check for each level 
+IsBST(BSTNode root, int range_min, int range_max)
+bool IsBST(Node* root )
+{
+	if (check root val with left and right along iwth null check)
+		return false
+		
+		
+} 
+Write a program to return all the permutations for a given string--------------recursive, backtrack
+
+	all of size 1
+	all of size 2 ...n 
+
+Write a program to delete duplicate characters in a string :
+Void DeleteDuplicate(string& strInput)
+{
+	string strOutput;
+	unordered_map<char, int> map;
+	for (auto character : strInput){
+		if(map[character] == 1)
+			continue;
+		else
+		{
+			map[character] = 1;
+			strOutput += character; 
+		}
+	}
+}
+What do you understand by Concurrency : two thread or process running simultaneously
+Give an example of how polymorphism is used in OOP : ok
+Explain with examples the two types of Polymorphism : compile time and runtime
+What do you understand by BlockingQueue : blocks when enqueue and dequeue is not permiteed 
+What is ConcurrentHashMap, and what is its main function? : synchronised
+https://www.interviewkickstart.com/problems
+
+========-------
+	Google interview
+1st HR screening : asked brief
+	asked few objective type screening question (running time of algo)
+	which search requires queue 
+	
+5 rounds
+all 45 min
+2 questions each
+1st Knowkout
+2nd , 3rd , 4th : normal coding and dsa
+5th behaviourl
+then team matching
+
+
+Algo
+-
+earching sorting
+
+DS
+---
+array
+linked list
+hash
+tree
+bitset etc
+trie
+
+
+
+
+OS
+--
+concurrency
+locks 
+resource alloc
+sheduling
+
+System design
+---------
+
+
+think aloud
+ask question to clarify
+
+
+Graph
+==========
+Depth first traversal
+
+int visited[v] = {0};
+int Graph[][], int VCount
+DFS()
+{
+	//iterate over row
+	for(int i =0; i< VCount; i++)
+	{
+		if(!Visited[v])
+			DFSUtil(V);
+	}
+}
+
+DFSUtil(int V)
+{
+	Visited{v] = 1;
+	cout << v;
+	//iterate over col
+	for(j = 0; j < vCount; j++)
+	{
+		if(Graph[V][j] != 1
+			continue;
+		if(!Visited[j])
+			DFSUtil(V);
+	}
+}
+
+DFSUtilIterative(int V)
+{
+	stack<int> st;
+	st.push(V);
+	While(!st.empty())
+	{
+		int curV = st.pop();
+		cout << curV;
+		Visited[curV] = 1;
+		//iterate over col
+		for(j = 0; j < vCount; j++)
+		{
+			if(Graph[curV][j] == 1)
+			{
+				if(!Visisted[j])
+					st.push(j);
+			}
+		}
+	}	
+}
+
+--------------------------------------
+BFS
+int visited[v] = {0};
+int Graph[][], int Vcount
+BFS()
+{
+	//iterate over row
+	for(int i =0; i< VCount; i++)
+	{
+		if(!Visited[v])
+			BFSUtil(V);
+	}
+}
+
+BFSUtil(int V)
+{
+	Queue<int> q;
+	q.insert(V);
+	While(!Q.empty())
+	{
+		int curV = q.remove();
+		cout << curV;
+		Visited[curV] = 1;
+		//iterate over col
+		for(j = 0; j < vCount; j++)
+		{
+			if(Graph[curV][j] == 1)
+			{
+				if(!Visisted[j])
+					q.insert(j);
+			}
+		}
+	}	
+}
+
+------------------------------------
+Topological sort  //modified DFS , push to stack at the end
+
+TS()
+{
+	//iterate over row
+	for(int i =0; i< VCount; i++)
+	{
+		if(!Visited[v])
+			TSUtil(V);
+	}
+}
+
+TSUtil(int V)
+{
+	Visited{v] = 1;
+	//iterate over col
+	for(j = 0; j < vCount; j++)
+	{
+		if(Graph[V][j] != 1
+			continue;
+		if(!Visited[j])
+			TSUtil(V);
+	}
+	st.push(v);
+}
+-------------------------
+Cycle in UnDirected Graph // If you find any visited node in DFSUtil, check if its the parent, if not then there is  a cycle
+
+DFS()
+{
+	//iterate over row
+	for(int i =0; i< VCount; i++)
+	{
+		if(!Visited[v])
+			if(IsCyclic(V, -1))
+				return true;
+	}
+}
+
+bool IsCyclic(int V, int parent)
+{
+	Visited{v] = 1;
+	//cout << v;
+	//iterate over col
+	for(j = 0; j < vCount; j++)
+	{
+		if(Graph[V][j] != 1)
+			continue;
+		if(!Visited[j])
+			 if(IsCyclic(j, v))
+				return true
+		else
+			if(j != parent)
+				return true
+	}
+	return false;
+}
+
+-----------
+Cycle in diected graph //modified DFS, here parent is not just prev node but a whole bool [], cycle if there is a edge from node to its ancestor
+
+DFS()
+{
+	//iterate over row
+	for(int i =0; i< VCount; i++)
+	{
+		int parent[] = {0};
+		if(!Visited[v])
+			if(IsCyclic(V, parent))
+				return true;
+	}
+}
+
+bool IsCyclic(int V, int parent[])
+{
+	Visited[v] = 1;
+	Parent[V] = 1
+	//cout << v;
+	//iterate over col
+	for(j = 0; j < vCount; j++)
+	{
+		if(Graph[V][j] != 1)
+			continue;
+		if(!Visited[j])
+			 if(IsCyclic(j, v))
+				return true
+		else
+			if(parent[j] == 1)
+				return true
+	}
+	Parent[V] = 0
+	return false;
+}
+------------------
+Graphs algorithms
+MST : min spanning tree , kushals and prims
+Min dist from src to all vertex: djikstras, bellman ford
+Min dist between all pair: floyd warshal
+
+Kushals: sort the edges , consider edges 1 by 1 and include if not forming cycle (super parent of both are not same)
+q<pair<int, int>, int> : sort
+msp<pair<int, int>, int> 
+int parent[] = // i for i
+edgeInMsp = 0
+
+int findParent(int v)
+{
+	while(parent[v] != v)
+	{
+		v = parent[v];
+	}
+	return v
+}
+
+Krushals
+{
+    for (edge in q)
+    {
+	if(findParent(q.first.first) 	! = findParent(q.first.second)
+	{
+		msp.push(edge);
+		parent[q.first.second] = q.first.first;  // to decide on who is parent use a rank array
+		edgeInMsp++;
+		if(edgeInMsp == v-1)
+			break
+	} 
+   }
+}
+
+Prims(int src)
+------
+dist[] = {INT_MAX to all}
+InMST[] = {0}
+dist[src = 0] = 0;
+    for(k: 0 to v-1)
+	i = find the min in dist, not already in MST
+	InMST[i] =  1; 
+	for(j: 0 to v-1)
+		if(InMST[j] == false && dist[j] > dist[i] + g[i][j]) 
+			dist[j] = dist[i] + g[i][j]
+
+dijkstras
+-----------
+dist[] = {INT_MAX to all}
+InMST[] = {0}
+dist[src = 0] = 0;
+    for(k: 0 to v-1)
+	i = find the min in dist, not already in MST
+	InMST[i] =  1; 
+	for(j: 0 to v-1)
+		if(InMST[j] == false && dist[j] > dist[i] + g[i][j]) 
+			dist[j] = dist[i] + g[i][j]
+
+Bellman Ford
+-------------
+	dist[src] = 0
+	for(v : vertex)
+		for(E : edge)
+			if(dist[e.sec] > dist[e.first] + e.weight)
+				dist[e.sec] = dist[e.first] + e.weight
+
+			
+
+Floyds
+-------
+3 loop
+
+for(k: 0 to V-1)
+	for(i: 0 to v-1)
+		for(j: 0 to v-1)
+			if(graph[i][j] > graph[i][k] + graphk][j])
+				graph[i][j] = graph[i][k] + graph[k][j]
+
+
+
+
+
+
+
