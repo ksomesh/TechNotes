@@ -1,1 +1,123 @@
+Mongo: w3school
+	• Document database
+	• Stores data in a JSON format called BSON
+	• A record is a doc(key value pair)
+		{title:"Post Title 1",
+		body:"Body of post.",
+		category:"News",
+		likes:1,
+		tags:["news","events"],
+		date:Date()
+}
+	• Collection holds multiple documents(similar to table holding records in sql)
+	• Cluster-> database-> collection -> documents
+	• Mongosh: mongodb shell 
+	• Mongodb query api : to interact with mongo db
+	• CRUD : create, read, update, delete
+		○ Show dbs :to show databases
+		○ use <database name> : to create /change  db
+		○ create
+			§ db.createCollection("posts") : create collection
+			§ db.posts.insertOne(object)  // first insert automatically creates db and collection if it does not exist
+			§ insertOne(), inserMany() // to insert doc
+		○ Read
+			§ db.posts.find()  // similar to select * from posts
+			§ db.posts.findOne() // returns the first match 
+			§ db.posts.find({category:"News"}) // returns matching docs
+			§ db.posts.find({},{title:1,date:1})  // similar to select title,date from posts ,
+			§ db.posts.find({},{_id:0,title:1,date:1})  // id is always shown, to supress id use this
+			§ db.posts.find({},{category:0}) // to show everything except category
+		○ Update
+			§ db.posts.updateOne({title:"Post Title 1"},{$set:{likes:2}}) // first is where clause , second is set
+			§ db.posts.updateMany({},{$inc:{likes:1}})  // increment like for multiple operator
+		○ Delete 
+			§ db.posts.deleteOne({title:"Post Title 5"})
+			§ db.posts.deleteMany({category:"Technology"})
+	• Operators
+		○ Comparison
+			§ $eq: Values are equal
+			§ $ne: Values are not equal
+			§ $gt: Value is greater than another value
+			§ $gte: Value is greater than or equal to another value
+			§ $lt: Value is less than another value
+			§ $lte: Value is less than or equal to another value
+			§ $in: Value is matched within an array
+		○ Logical
+			§ $and: Returns documents where both queries match
+			§ $or: Returns documents where either query matches
+			§ $nor: Returns documents where both queries fail to match
+			§ $not: Returns documents where the query does not match
+		○ evaluation
+			§ $regex: Allows the use of regular expressions when evaluating field values
+			§ $text: Performs a text search
+			§ $where: Uses a JavaScript expression to match documents
+		○ Update 
+			§ $currentDate: Sets the field value to the current date
+			§ $inc: Increments the field value
+			§ $rename: Renames the field
+			§ $set: Sets the value of a field
+			§ $unset: Removes the field from the document
+			§ $addToSet: Adds distinct elements to an array
+			§ $pop: Removes the first or last element of an array
+			§ $pull: Removes all elements from an array that match the query
+			§ $push: Adds an element to an array
+	• Aggregators : can have multiple stages, order is important
+		○ db.posts.aggregate([// Stage 1: Only find documents that have more than 1 like{$match:{likes:{$gt:1}}},// Stage 2: Group documents by category and sum each categories likes{$group:{_id:"$category",totalLikes:{$sum:"$likes"}}}])
+		○ $group
+			§ db.listingsAndReviews.aggregate([{$group:{_id:"$property_type"}}])
+		○ $limit : limits the number of doc passed to next stage
+			§ db.movies.aggregate([{$limit:1}])
+		○ $project : determined the fields passed to next stage
+			§ db.restaurants.aggregate([{$project:{"name":1,"cuisine":1,"address":1}},{$limit:5}])
+		○ $sort : sorting , 1 for ascending -1 desc
+			§ db.listingsAndReviews.aggregate([{$sort:{"accommodates":-1}},{$project:{"name":1,"accommodates":1}},{$limit:5}])
+		○ $match : similar to find
+			§ db.listingsAndReviews.aggregate([{$match:{property_type:"House"}},{$limit:2},{$project:{"name":1,"bedrooms":1,"price":1}}])
+		○ $addFields :  add a new field
+			§ db.restaurants.aggregate([{$addFields:{avgGrade:{$avg:"$grades.score"}}},{$project:{"name":1,"avgGrade":1}},{$limit:5}])
+		○ $count :
+			§ db.restaurants.aggregate([{$match:{"cuisine":"Chinese"}},{$count:"totalChinese"}])
+		○ $lookup : perform left outer join with a collection in same db . Below are req fields
+			§ from: The collection to use for lookup in the same database
+			§ localField: The field in the primary collection that can be used as a unique identifier in the from collection.
+			§ foreignField: The field in the from collection that can be used as a unique identifier in the primary collection.
+			§ as: The name of the new field that will contain the matching documents from the from collection.
+			§ db.comments.aggregate([{$lookup:{from:"movies",localField:"movie_id",foreignField:"_id",as:"movie_details",},},{$limit:1}])
+		○ $out: writes the returned document to a new collection
+			§ db.listingsAndReviews.aggregate([{$group:{_id:"$property_type",properties:{$push:{name:"$name",accommodates:"$accommodates",price:"$price",},},},},{$out:"properties_by_type"},])
+	• Indexing and search :
+		○ Index can be created from dashboard  then can be used in search as below
+		○ db.movies.aggregate([{$search:{index:"default",// optional unless you named your index something other than "default"text:{query:"star wars",path:"title"},},},{$project:{title:1,year:1,}}])
+	• Schema validation :  mongodb does not have a fixed schema, but a schema validation can be enforced by below commands
+		• db.createCollection("posts",{validator:{$jsonSchema:{bsonType:"object",required:["title","body"],properties:{title:{bsonType:"string",description:"Title of post - Required."},body:{bsonType:"string",description:"Body of post - Required."},category:{bsonType:"string",description:"Category of post - Optional."},likes:{bsonType:"int",description:"Post like count. Must be an integer - Optional."},tags:{bsonType:["string"],description:"Must be an array of strings - Optional."},date:{bsonType:"date",description:"Must be a date - Optional."}}}}})
+	• APIs: mongodb support https APIs, can be called using curl. First needs to be configured from dashboard
+		• curl --location --request POST'https://data.mongodb-api.com/app/<DATA API APP ID>/endpoint/data/v1/action/findOne'\
+    --header 'Content-Type: application/json'\
+    --header 'Access-Control-Request-Headers: *'\
+    --header 'api-key: <DATA API KEY>'\
+    --data-raw '{"dataSource":"<CLUSTER NAME>","database":"sample_mflix","collection":"movies","projection":{"title":1}}'
+		
+		• This has a REST like structure
+	• Drives
+		• Almost all major languages have mongo db drivers
+		
+	• Charts: lets you visualize , can be created from dashboard
+	
+	
+		
+		
+		
+		
+			
+			
+			
+	
+			
+			
+			
+		
+
+	
+		
+		
 
